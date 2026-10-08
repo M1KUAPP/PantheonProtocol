@@ -1,0 +1,18 @@
+{
+  "name": "PantheonProtocol",
+  "description": "An NFT marketplace for game items that mints them out of one game, trades them on-chain with royalties, and exports them into another game.",
+  "logo": {
+    "light": "logo-light.svg",
+    "dark": "logo-dark.svg"
+  },
+  "screenshot": {
+    "light": "screenshots/dashboard-light.png",
+    "dark": "steps/8-dashboard.png"
+  },
+  "colors": {
+    "light": { "paper": "#FFFFFF", "ink": "#202020", "accent": "#00ADB5" },
+    "dark": { "paper": "#1A1A1A", "ink": "#E0E0E0", "accent": "#FF7738" }
+  },
+  "font": "https://fonts.googleapis.com/css2?family=Manrope:wght@400..800&display=swap",
+  "out": "docs/readme"
+}
