@@ -76,7 +76,7 @@ export class ToastNotificationService implements INotificationService {
     return toast(message, {
       duration,
       position: this.defaultPosition,
-      icon: 'i',
+      icon: 'ℹ️',
       style: {
         background: '#3b82f6',
         color: '#fff',
@@ -160,7 +160,7 @@ export class ToastNotificationService implements INotificationService {
         toast(message, {
           ...baseStyle,
           id: toastId,
-          icon: 'i',
+          icon: 'ℹ️',
           style: {
             ...baseStyle.style,
             background: '#3b82f6'

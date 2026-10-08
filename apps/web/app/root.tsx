@@ -52,7 +52,8 @@ export default function App() {
           <Styles />
           <CustomThemeProvider>
             <Outlet />
-            <Toaster />
+            {/* The global reset zeroes react-hot-toast's :where() padding; inline style restores its default. */}
+            <Toaster toastOptions={{ style: { padding: '8px 10px' } }} />
           </CustomThemeProvider>
         </AppProvider>
       </QueryClientProvider>
