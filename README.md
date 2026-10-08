@@ -6,8 +6,8 @@
 <div align="center">
   <a href="https://github.com/M1KUAPP/PantheonProtocol">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="docs/readme/banner-dark.png">
-      <img src="docs/readme/banner-light.png" alt="PantheonProtocol banner">
+      <source media="(prefers-color-scheme: dark)" srcset="/docs/readme/banner-dark.png">
+      <img src="/docs/readme/banner-light.png" alt="PantheonProtocol banner">
     </picture>
   </a>
 
@@ -93,36 +93,36 @@ Built as coursework, where it earned an A+.
 <table>
   <tr>
     <td width="50%" valign="top" align="left">
-      <img src="docs/readme/screenshots/about.png" alt="Landing page about section" width="100%">
+      <img src="/docs/readme/screenshots/about.png" alt="Landing page about section" width="100%">
       <br />
       <strong>Landing Page</strong> · The about section, with a fanned carousel of showcase art.
     </td>
     <td width="50%" valign="top" align="left">
-      <img src="docs/readme/screenshots/showcase.png" alt="Landing page showcase" width="100%">
+      <img src="/docs/readme/screenshots/showcase.png" alt="Landing page showcase" width="100%">
       <br />
       <strong>Showcase</strong> · Rows of sample NFTs that scroll in opposite directions.
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top" align="left">
-      <img src="docs/readme/screenshots/nft-details.png" alt="NFT details" width="100%">
+      <img src="/docs/readme/screenshots/nft-details.png" alt="NFT details" width="100%">
       <br />
       <strong>NFT Details</strong> · An owned item's metadata from IPFS: type, rarity, attributes and listing status.
     </td>
     <td width="50%" valign="top" align="left">
-      <img src="docs/readme/screenshots/marketplace-filters.png" alt="Marketplace filtered to weapons" width="100%">
+      <img src="/docs/readme/screenshots/marketplace-filters.png" alt="Marketplace filtered to weapons" width="100%">
       <br />
       <strong>Marketplace Filters</strong> · Listings filtered to weapons and sorted by price.
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top" align="left">
-      <img src="docs/readme/screenshots/transaction-history.png" alt="Transaction history" width="100%">
+      <img src="/docs/readme/screenshots/transaction-history.png" alt="Transaction history" width="100%">
       <br />
       <strong>Transaction History</strong> · The wallet's recent transactions, read from the chain.
     </td>
     <td width="50%" valign="top" align="left">
-      <img src="docs/readme/screenshots/dashboard-light.png" alt="Dashboard in the light theme" width="100%">
+      <img src="/docs/readme/screenshots/dashboard-light.png" alt="Dashboard in the light theme" width="100%">
       <br />
       <strong>Light Theme</strong> · The dashboard in the light theme, which follows the system setting.
     </td>
@@ -137,35 +137,35 @@ The screens below come from the app running locally against a Hardhat node and a
 
 1.  **Connect a wallet.** The landing page at `/` introduces the platform. **Connect Wallet** connects MetaMask, or any injected wallet, on the Hardhat chain (ID 31337), and the app pages open from the header.
 
-    <img src="docs/readme/steps/1-connect.png" alt="Landing page with Connect Wallet" width="100%">
+    <img src="/docs/readme/steps/1-connect.png" alt="Landing page with Connect Wallet" width="100%">
 
 2.  **Mint a game item.** On `/create-nft`, the player enters an item's ID from the source game. The app fetches the item from the API, and the wallet signs one message that authorizes the mint. The app downloads the item's image, pins it and the metadata to IPFS through signed Pinata upload URLs from the API, and mints the NFT with the item's ID recorded on-chain. Finally, the API checks that the signer holds the new token and removes the item from the source game.
 
-    <img src="docs/readme/steps/2-mint.png" alt="Create NFT page after a successful mint" width="100%">
+    <img src="/docs/readme/steps/2-mint.png" alt="Create NFT page after a successful mint" width="100%">
 
 3.  **Open the inventory.** `/inventory` shows every NFT the wallet owns, with metadata from IPFS, and counts the NFTs it owns, has exported and has listed.
 
-    <img src="docs/readme/steps/3-inventory.png" alt="Inventory with owned NFTs" width="100%">
+    <img src="/docs/readme/steps/3-inventory.png" alt="Inventory with owned NFTs" width="100%">
 
 4.  **List an item for sale.** **List for Sale** takes a price in ETH. On **Confirm**, the app approves the marketplace for the token, if it isn't approved yet, and lists it. The marketplace holds the NFT in escrow until it sells or the seller cancels.
 
-    <img src="docs/readme/steps/4-list.png" alt="List for sale form on an inventory card" width="100%">
+    <img src="/docs/readme/steps/4-list.png" alt="List for sale form on an inventory card" width="100%">
 
 5.  **Browse the marketplace.** `/marketplace` shows every active listing. Players search by name, filter by item type and rarity, and sort by price, rarity or a numeric attribute.
 
-    <img src="docs/readme/steps/5-marketplace.png" alt="Marketplace listings" width="100%">
+    <img src="/docs/readme/steps/5-marketplace.png" alt="Marketplace listings" width="100%">
 
 6.  **Buy an item.** **View Item** opens the listing with its seller, attributes and price. **Buy Now** pays the price, sends the royalty to the royalty receiver and the rest to the seller, and transfers the NFT to the buyer.
 
-    <img src="docs/readme/steps/6-buy.png" alt="Listing details with Buy Now" width="100%">
+    <img src="/docs/readme/steps/6-buy.png" alt="Listing details with Buy Now" width="100%">
 
 7.  **Export it into another game.** **Export to Game** asks the wallet to sign the export, then burns the NFT through the export contract, which records the export on-chain. The API checks that the signer made that export, then writes the item into the target game's table.
 
-    <img src="docs/readme/steps/7-export.png" alt="Inventory after an export" width="100%">
+    <img src="/docs/readme/steps/7-export.png" alt="Inventory after an export" width="100%">
 
 8.  **Watch the wallet.** `/dashboard` shows the wallet address and its ETH balance in USD, the gas price, the recently added NFTs, and the transaction history from the latest 100 blocks.
 
-    <img src="docs/readme/steps/8-dashboard.png" alt="Dashboard" width="100%">
+    <img src="/docs/readme/steps/8-dashboard.png" alt="Dashboard" width="100%">
 
 <p align="right"><a href="#readme-top">&uarr;</a></p>
 
@@ -186,13 +186,11 @@ The screens below come from the app running locally against a Hardhat node and a
 ### Architecture
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/readme/architecture-dark.svg">
-  <img src="docs/readme/architecture-light.svg" alt="PantheonProtocol architecture">
+  <source media="(prefers-color-scheme: dark)" srcset="/docs/readme/architecture-dark.svg">
+  <img src="/docs/readme/architecture-light.svg" alt="PantheonProtocol architecture">
 </picture>
 
-Made with [archify](https://github.com/tt-a1i/archify) from [`architecture.json`](docs/readme/architecture.json).
-
-The browser talks to the chain through the player's wallet, and to the Express API over HTTPS. The API is the only part that holds the Supabase service-role key and the Pinata JWT. The dashboard also reads the ETH price from Coinbase's public API.
+Made with [Archify](https://github.com/tt-a1i/archify) from [`architecture.json`](/docs/readme/architecture.json).
 
 <p align="right"><a href="#readme-top">&uarr;</a></p>
 
@@ -309,7 +307,7 @@ Made with [contrib.rocks](https://contrib.rocks).
 
 ## License
 
-See [LICENSE](LICENSE) for more information.
+See [LICENSE](/LICENSE) for more information.
 
 <p align="right"><a href="#readme-top">&uarr;</a></p>
 
@@ -325,9 +323,9 @@ See [LICENSE](LICENSE) for more information.
 - [Coinbase Prices API](https://docs.cdp.coinbase.com/coinbase-app/track-apis/prices) — the ETH price.
 - [Heroicons](https://heroicons.com) and [react-icons](https://react-icons.github.io/react-icons/) — icons.
 - [Manrope](https://fonts.google.com/specimen/Manrope) — the typeface.
-- [archify](https://github.com/tt-a1i/archify) — the architecture diagram.
-- [Shields.io](https://shields.io)
+- [Archify](https://github.com/tt-a1i/archify)
 - [contrib.rocks](https://contrib.rocks)
+- [Shields.io](https://shields.io)
 
 <p align="right"><a href="#readme-top">&uarr;</a></p>
 
