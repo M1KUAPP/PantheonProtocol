@@ -21,11 +21,11 @@ const __dirname = path.dirname(__filename)
 const LOCAL_IMAGE_FOLDER = path.join(__dirname, '..', 'assets', 'game_asset_images')
 
 /** Supabase storage bucket name from environment. */
-const SUPABASE_BUCKET = process.env.VITE_SUPABASE_BUCKET_NAME
+const SUPABASE_BUCKET = process.env.SUPABASE_BUCKET_NAME
 /** Supabase project URL from environment. */
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL
+const SUPABASE_URL = process.env.SUPABASE_URL
 /** Supabase service role key from environment. */
-const SUPABASE_KEY = process.env.VITE_SUPABASE_SERVICE_ROLE_KEY
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 
 if (!SUPABASE_URL || !SUPABASE_KEY) {
   throw new Error('Missing Supabase configuration')
@@ -71,8 +71,11 @@ async function seeding() {
       try {
         await seeder.createSourceGameAsset(asset, imageUrl)
         console.log(`Created source game asset: ${asset.uid}`)
-      } catch (error: any) {
-        console.error(`!!! Failed to create source game asset ${asset.uid}:`, error.message)
+      } catch (error) {
+        console.error(
+          `!!! Failed to create source game asset ${asset.uid}:`,
+          error instanceof Error ? error.message : error
+        )
       }
     }
     console.log(`\nProcessing target game assets (${targetGameAssetsData.length})`)
@@ -85,13 +88,16 @@ async function seeding() {
       try {
         await seeder.createTargetGameAsset(asset, imageUrl)
         console.log(`Created target game asset: ${asset.uid}`)
-      } catch (error: any) {
-        console.error(`!!! Failed to create target game asset ${asset.uid}:`, error.message)
+      } catch (error) {
+        console.error(
+          `!!! Failed to create target game asset ${asset.uid}:`,
+          error instanceof Error ? error.message : error
+        )
       }
     }
     console.log('\nSeeding completed successfully')
-  } catch (error: any) {
-    console.error('!!! Fatal error:', error.message)
+  } catch (error) {
+    console.error('!!! Fatal error:', error instanceof Error ? error.message : error)
     throw error
   } finally {
     await prisma.$disconnect()

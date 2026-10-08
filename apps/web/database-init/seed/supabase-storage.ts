@@ -50,12 +50,12 @@ export class SupabaseStorage {
       const fileBuffer = await readFile(filePath)
       const { data: uploadData, error: uploadError } = await this.supabase.storage
         .from(this.bucketName)
-        .upload(fileName, fileBuffer, { upsert: true })
+        .upload(fileName, fileBuffer, { contentType: 'image/png', upsert: true })
       if (uploadError) throw uploadError
       const { data: urlData } = this.supabase.storage.from(this.bucketName).getPublicUrl(uploadData.path)
       return urlData.publicUrl
-    } catch (error: any) {
-      console.error(`Error uploading ${fileName}:`, error.message)
+    } catch (error) {
+      console.error(`Error uploading ${fileName}:`, error instanceof Error ? error.message : error)
       return null
     }
   }

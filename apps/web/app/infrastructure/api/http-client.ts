@@ -78,6 +78,14 @@ export type ExportNFTResponse = HttpApiResponse & {
 export type DeleteAssetResponse = HttpApiResponse
 
 /**
+ * Response type for creating a Pinata upload URL.
+ */
+export type UploadUrlResponse = HttpApiResponse & {
+  /** Short-lived signed URL that accepts one upload */
+  url?: string
+}
+
+/**
  * HTTP client for communicating with the game's backend API.
  *
  * Provides methods for fetching game assets, exporting NFTs back to the game,
@@ -184,6 +192,14 @@ class HttpClient {
    */
   async removeAssetRecord(uid: string | number): Promise<DeleteAssetResponse> {
     return this.delete<DeleteAssetResponse>(`${this.config.getApiEndpoints().REMOVE_RECORD}/${uid}`)
+  }
+
+  /**
+   * Asks the API for a signed Pinata upload URL.
+   * @returns Promise resolving to the response holding the URL
+   */
+  async createIpfsUploadUrl(): Promise<UploadUrlResponse> {
+    return this.post<UploadUrlResponse>(this.config.getApiEndpoints().IPFS_UPLOAD_URL, {})
   }
 }
 

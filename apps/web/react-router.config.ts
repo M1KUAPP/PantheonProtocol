@@ -1,7 +1,6 @@
 import type { Config } from '@react-router/dev/config'
 
 export default {
-  // Config options...
-  // Server-side render by default, to enable SPA mode set this to `false`
-  ssr: false // Disable SSR for styled-components compatibility
+  // SPA mode: styled-components isn't set up for server rendering.
+  ssr: false
 } satisfies Config

@@ -38,7 +38,7 @@ export class CoinbasePriceRepository implements IPriceRepository {
       }
       const json = (await response.json()) as CoinbaseResponse
       return parseFloat(json.data.amount)
-    } catch (error) {
+    } catch {
       throw new NetworkError('Could not fetch current ETH price')
     }
   }

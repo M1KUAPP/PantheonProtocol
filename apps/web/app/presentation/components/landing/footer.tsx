@@ -42,7 +42,7 @@ const MENU_ITEM_MAP = [
  */
 export const Footer = () => {
   const navigateTo = (id: string) => {
-    let e = document.getElementById(id)
+    const e = document.getElementById(id)
     e?.scrollIntoView({
       behavior: 'smooth',
       block: 'start',

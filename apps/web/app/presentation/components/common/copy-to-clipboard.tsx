@@ -32,7 +32,7 @@ export const CopyToClipboard = ({ textToCopy, color }: CopyToClipboardProps) => 
       setTimeout(() => {
         setIsCopied(false)
       }, 2000)
-    } catch (err) {
+    } catch {
       notification.error('Failed to copy address.')
     }
   }

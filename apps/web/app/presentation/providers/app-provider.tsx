@@ -13,6 +13,7 @@ import { ToastNotificationService } from '@presentation/services/toast-notificat
 import { getDIContainer } from '@shared/di/container-factory'
 import type { ReactNode } from 'react'
 import { createContext, useContext, useMemo } from 'react'
+import type { Config } from '@wagmi/core'
 
 /** React context for the dependency injection container. */
 const DIContext = createContext<DIContainer | null>(null)
@@ -21,7 +22,7 @@ const DIContext = createContext<DIContainer | null>(null)
 interface AppProviderProps {
   readonly children: ReactNode
   readonly appConfig: AppConfig
-  readonly wagmiConfig: any
+  readonly wagmiConfig: Config
   readonly container?: DIContainer
 }
 

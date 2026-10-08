@@ -5,6 +5,7 @@ import type {
 } from '@core/interfaces/transaction-history.repository.interface'
 import type { Address } from '@core/value-objects/address.vo'
 import { getBlock, getBlockNumber, getTransactionReceipt } from '@wagmi/core'
+import type { Config } from '@wagmi/core'
 
 /** Default number of recent blocks to scan for transaction history */
 const DEFAULT_BLOCKS_TO_SCAN = 100
@@ -17,7 +18,7 @@ const DEFAULT_BLOCKS_TO_SCAN = 100
  * is limited by block range and may not capture all historical transactions.
  */
 export class TransactionHistoryBlockchainRepository implements ITransactionHistoryRepository {
-  constructor(private readonly config: any) {}
+  constructor(private readonly config: Config) {}
   async getRecentTransactions(
     address: Address,
     maxBlocks: number = DEFAULT_BLOCKS_TO_SCAN

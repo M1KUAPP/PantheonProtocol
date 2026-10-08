@@ -11,8 +11,9 @@ import { PinataSDK } from 'pinata'
  * Configuration options for Pinata IPFS service.
  */
 interface PinataConfig {
-  readonly jwt: string
   readonly gateway: string
+  /** Returns a signed upload URL from the API, which holds the Pinata JWT */
+  readonly getUploadUrl: () => Promise<string>
 }
 
 /**
@@ -27,26 +28,27 @@ interface PinataConfig {
 export class PinataIPFSRepository implements IIPFSRepository {
   private readonly pinata: PinataSDK
   private readonly gateway: string
+  private readonly getUploadUrl: () => Promise<string>
   constructor(config: PinataConfig) {
-    if (!config.jwt) {
-      throw new ConfigurationError('Pinata JWT is required for IPFS repository')
-    }
     if (!config.gateway) {
       throw new ConfigurationError('Pinata Gateway is required for IPFS repository')
     }
     this.gateway = config.gateway
+    this.getUploadUrl = config.getUploadUrl
     this.pinata = new PinataSDK({
-      pinataJwt: config.jwt,
+      pinataJwt: '',
       pinataGateway: this.gateway
     })
   }
   async uploadFile(file: File): Promise<IPFSPinResult> {
     try {
-      const upload = await this.pinata.upload.public.file(file, {
-        metadata: {
-          name: file.name
-        }
-      })
+      const upload = await this.pinata.upload.public
+        .file(file, {
+          metadata: {
+            name: file.name
+          }
+        })
+        .url(await this.getUploadUrl())
       return {
         cid: IpfsCidClass.create(upload.cid),
         url: UriClass.create(`https://${this.gateway}/ipfs/${upload.cid}`)
@@ -62,7 +64,7 @@ export class PinataIPFSRepository implements IIPFSRepository {
       const metadataFile = new File([jsonString], `${baseFilename}-metadata.json`, {
         type: 'application/json'
       })
-      const upload: UploadResponse = await this.pinata.upload.public.file(metadataFile)
+      const upload: UploadResponse = await this.pinata.upload.public.file(metadataFile).url(await this.getUploadUrl())
       return {
         cid: IpfsCidClass.create(upload.cid),
         url: UriClass.create(`https://${this.gateway}/ipfs/${upload.cid}`)

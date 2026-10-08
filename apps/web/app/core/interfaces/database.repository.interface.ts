@@ -24,7 +24,7 @@ export interface IDatabaseRepository {
    * @param uid - The unique identifier of the asset
    * @returns Promise resolving to the query result
    */
-  getAssetByUid(tableName: string, uid: number): Promise<DatabaseQueryResult<any>>
+  getAssetByUid(tableName: string, uid: number): Promise<DatabaseQueryResult<unknown>>
 
   /**
    * Inserts a new asset into the database.
@@ -32,7 +32,7 @@ export interface IDatabaseRepository {
    * @param asset - The asset data to insert
    * @returns Promise resolving to the inserted record
    */
-  insertAsset(tableName: string, asset: any): Promise<DatabaseQueryResult<any>>
+  insertAsset(tableName: string, asset: object): Promise<DatabaseQueryResult<unknown>>
 
   /**
    * Deletes an asset from the database.

@@ -50,7 +50,7 @@ export const Marketplace = () => {
     } finally {
       setIsLoading(false)
     }
-  }, [getListings])
+  }, [getListings, notificationService])
   useEffect(() => {
     fetchListings()
   }, [fetchListings])

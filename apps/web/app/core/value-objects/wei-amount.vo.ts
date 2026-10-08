@@ -51,7 +51,7 @@ export class WeiAmount extends ValueObject<bigint> {
       const bigIntValue = BigInt(value)
       return WeiAmount.create(bigIntValue)
     } catch (error) {
-      throw new Error(`Cannot parse Wei amount from string: ${value}`)
+      throw new Error(`Cannot parse Wei amount from string: ${value}`, { cause: error })
     }
   }
 
