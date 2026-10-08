@@ -148,6 +148,15 @@ export const ActionButton = styled.button<{
 
 export const InputContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 0.5rem;
+
+  & > input {
+    flex-basis: 100%;
+  }
+
+  & > button {
+    flex: 1;
+  }
 `
