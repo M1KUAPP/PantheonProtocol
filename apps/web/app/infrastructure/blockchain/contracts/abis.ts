@@ -27,7 +27,8 @@ export const ASSET_NFT_ABI = parseAbi([
   'function nextTokenId() external view returns (uint256)',
   'function getUserInventory(address user) external view returns ((uint256 tokenId, address owner, string tokenURI, uint256 assetId, bool exists)[])',
   'function getBatchNFTData(uint256[] calldata tokenIds) external view returns ((uint256 tokenId, address owner, string tokenURI, uint256 assetId, bool exists)[])',
-  'event Minted(uint256 indexed tokenId, address indexed to, uint256 indexed assetId, string tokenURI_)'
+  'event Minted(uint256 indexed tokenId, address indexed to, uint256 indexed assetId, string tokenURI_)',
+  'event Burned(uint256 indexed tokenId, address indexed by, uint256 indexed assetId)'
 ])
 
 /**

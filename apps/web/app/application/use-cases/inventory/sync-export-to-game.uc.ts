@@ -1,3 +1,4 @@
+import type { ApiAuth } from '@core/auth/api-auth'
 import type { IAPIRepository } from '@core/interfaces/api.repository.interface'
 import type { Result } from '@core/interfaces/result.type'
 import { executeAsync } from '@core/interfaces/result.type'
@@ -7,6 +8,8 @@ import { executeAsync } from '@core/interfaces/result.type'
  */
 interface SyncExportToGameParams {
   uid: number
+  tokenId: number
+  auth: ApiAuth
   name: string
   description: string
   item_type: string
@@ -25,15 +28,19 @@ export class SyncExportToGameUseCase {
   constructor(private readonly apiRepository: IAPIRepository) {}
   async execute(params: SyncExportToGameParams): Promise<Result<void>> {
     return executeAsync(async () => {
-      await this.apiRepository.exportNFTToGame({
-        uid: params.uid,
-        name: params.name,
-        description: params.description,
-        item_type: params.item_type,
-        rarity: params.rarity,
-        imagePath: params.imagePath,
-        attributes: params.attributes
-      })
+      await this.apiRepository.exportNFTToGame(
+        {
+          uid: params.uid,
+          tokenId: params.tokenId,
+          name: params.name,
+          description: params.description,
+          item_type: params.item_type,
+          rarity: params.rarity,
+          imagePath: params.imagePath,
+          attributes: params.attributes
+        },
+        params.auth
+      )
     })
   }
 }

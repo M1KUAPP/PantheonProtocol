@@ -46,17 +46,19 @@ export interface IIPFSRepository {
   /**
    * Uploads a file to IPFS and pins it.
    * @param file - The file to upload
+   * @param uploadUrl - A signed upload URL from the API
    * @returns Promise resolving to the pin result with CID and URL
    */
-  uploadFile(file: File): Promise<IPFSPinResult>
+  uploadFile(file: File, uploadUrl: string): Promise<IPFSPinResult>
 
   /**
    * Uploads NFT metadata as a JSON file to IPFS.
    * @param metadata - The metadata object to upload
    * @param filename - The filename for the metadata file
+   * @param uploadUrl - A signed upload URL from the API
    * @returns Promise resolving to the pin result
    */
-  uploadMetadata(metadata: IPFSMetadata, filename: string): Promise<IPFSPinResult>
+  uploadMetadata(metadata: IPFSMetadata, filename: string, uploadUrl: string): Promise<IPFSPinResult>
 
   /**
    * Retrieves raw content from IPFS by CID.

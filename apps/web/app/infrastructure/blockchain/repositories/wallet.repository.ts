@@ -1,11 +1,12 @@
 import { Wallet } from '@core/entities/wallet.entity'
-import { WalletError } from '@core/errors/domain-error'
+import { UserRejectedError, WalletError } from '@core/errors/domain-error'
+import { isUserRejectedError } from '@core/errors/error-helpers'
 import type { IWalletRepository } from '@core/interfaces/wallet.repository.interface'
 import type { Address } from '@core/value-objects/address.vo'
 import { Address as AddressClass } from '@core/value-objects/address.vo'
 import { WeiAmount } from '@core/value-objects/wei-amount.vo'
 import type { Config } from '@wagmi/core'
-import { connect, disconnect, getAccount, getBalance, switchChain } from '@wagmi/core'
+import { connect, disconnect, getAccount, getBalance, signMessage, switchChain } from '@wagmi/core'
 
 /**
  * Implementation of IWalletRepository using wagmi for Web3 wallet interactions.
@@ -105,6 +106,16 @@ export class WalletRepository implements IWalletRepository {
       return this.createAddress(account.address)
     } catch (error) {
       throw new WalletError(error instanceof Error ? error.message : 'Failed to get address')
+    }
+  }
+  async signMessage(message: string): Promise<`0x${string}`> {
+    try {
+      return await signMessage(this.config, { message })
+    } catch (error) {
+      if (isUserRejectedError(error)) {
+        throw new UserRejectedError('Signature request cancelled by user')
+      }
+      throw new WalletError(error instanceof Error ? error.message : 'Failed to sign message')
     }
   }
   private createAddress(value: string): Address {
