@@ -4,9 +4,9 @@
   "scripts": {
     "typecheck": "react-router typegen && tsc",
     "dev": "react-router dev",
-    "dev:server": "tsx watch --env-file=../.env ./app/server.ts",
-    "db:migrate": "tsx --env-file=../.env ./node_modules/.bin/prisma migrate dev --name schema",
-    "db:seed": "tsx --env-file=../.env ./node_modules/.bin/prisma db seed"
+    "dev:server": "tsx watch --env-file=../../.env ./app/server.ts",
+    "db:migrate": "tsx --env-file=../../.env ./node_modules/.bin/prisma migrate dev --name schema",
+    "db:seed": "tsx --env-file=../../.env ./node_modules/.bin/prisma db seed"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
