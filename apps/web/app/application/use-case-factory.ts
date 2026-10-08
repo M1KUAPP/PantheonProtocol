@@ -32,7 +32,7 @@ import type { RepositoryContainer } from '@core/interfaces/repository-container.
  */
 export const NFTUseCaseFactory = {
   createMintNFTFromAsset(repositories: RepositoryContainer): MintNFTFromAssetUseCase {
-    return new MintNFTFromAssetUseCase(repositories.nft, repositories.ipfs, repositories.api)
+    return new MintNFTFromAssetUseCase(repositories.nft, repositories.ipfs, repositories.api, repositories.wallet)
   },
   createGetUserNFTs(repositories: RepositoryContainer): GetUserNFTsUseCase {
     return new GetUserNFTsUseCase(repositories.nft)
@@ -47,7 +47,7 @@ export const NFTUseCaseFactory = {
  */
 export const InventoryUseCaseFactory = {
   createExportNFT(repositories: RepositoryContainer): ExportNFTUseCase {
-    return new ExportNFTUseCase(repositories.nft, repositories.exportManager)
+    return new ExportNFTUseCase(repositories.nft, repositories.exportManager, repositories.wallet)
   },
   createGetUserInventory(repositories: RepositoryContainer): GetUserInventoryUseCase {
     return new GetUserInventoryUseCase(

@@ -12,8 +12,6 @@ import { PinataSDK } from 'pinata'
  */
 interface PinataConfig {
   readonly gateway: string
-  /** Returns a signed upload URL from the API, which holds the Pinata JWT */
-  readonly getUploadUrl: () => Promise<string>
 }
 
 /**
@@ -28,19 +26,17 @@ interface PinataConfig {
 export class PinataIPFSRepository implements IIPFSRepository {
   private readonly pinata: PinataSDK
   private readonly gateway: string
-  private readonly getUploadUrl: () => Promise<string>
   constructor(config: PinataConfig) {
     if (!config.gateway) {
       throw new ConfigurationError('Pinata Gateway is required for IPFS repository')
     }
     this.gateway = config.gateway
-    this.getUploadUrl = config.getUploadUrl
     this.pinata = new PinataSDK({
       pinataJwt: '',
       pinataGateway: this.gateway
     })
   }
-  async uploadFile(file: File): Promise<IPFSPinResult> {
+  async uploadFile(file: File, uploadUrl: string): Promise<IPFSPinResult> {
     try {
       const upload = await this.pinata.upload.public
         .file(file, {
@@ -48,7 +44,7 @@ export class PinataIPFSRepository implements IIPFSRepository {
             name: file.name
           }
         })
-        .url(await this.getUploadUrl())
+        .url(uploadUrl)
       return {
         cid: IpfsCidClass.create(upload.cid),
         url: UriClass.create(`https://${this.gateway}/ipfs/${upload.cid}`)
@@ -57,14 +53,14 @@ export class PinataIPFSRepository implements IIPFSRepository {
       throw new IPFSError(error instanceof Error ? error.message : 'Failed to upload file to IPFS')
     }
   }
-  async uploadMetadata(metadata: IPFSMetadata, filename: string): Promise<IPFSPinResult> {
+  async uploadMetadata(metadata: IPFSMetadata, filename: string, uploadUrl: string): Promise<IPFSPinResult> {
     try {
       const jsonString = JSON.stringify(metadata, null, 2)
       const baseFilename = filename
       const metadataFile = new File([jsonString], `${baseFilename}-metadata.json`, {
         type: 'application/json'
       })
-      const upload: UploadResponse = await this.pinata.upload.public.file(metadataFile).url(await this.getUploadUrl())
+      const upload: UploadResponse = await this.pinata.upload.public.file(metadataFile).url(uploadUrl)
       return {
         cid: IpfsCidClass.create(upload.cid),
         url: UriClass.create(`https://${this.gateway}/ipfs/${upload.cid}`)

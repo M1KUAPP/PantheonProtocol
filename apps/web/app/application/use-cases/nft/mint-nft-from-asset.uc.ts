@@ -1,7 +1,9 @@
+import { signApiRequest } from '@application/use-cases/auth/sign-api-request'
 import { ValidationError } from '@core/errors/domain-error'
 import type { IAPIRepository } from '@core/interfaces/api.repository.interface'
 import type { IIPFSRepository, IPFSMetadata } from '@core/interfaces/ipfs.repository.interface'
 import type { INFTRepository } from '@core/interfaces/nft.repository.interface'
+import type { IWalletRepository } from '@core/interfaces/wallet.repository.interface'
 import type { Result } from '@core/interfaces/result.type'
 import { executeAsync } from '@core/interfaces/result.type'
 import { Address } from '@core/value-objects/address.vo'
@@ -39,7 +41,8 @@ export class MintNFTFromAssetUseCase {
   constructor(
     private readonly nftRepository: INFTRepository,
     private readonly ipfsRepository: IIPFSRepository,
-    private readonly apiRepository: IAPIRepository
+    private readonly apiRepository: IAPIRepository,
+    private readonly walletRepository: IWalletRepository
   ) {}
   async execute(params: MintNFTFromAssetParams): Promise<Result<MintNFTFromAssetResult>> {
     return executeAsync(async () => {
@@ -50,9 +53,13 @@ export class MintNFTFromAssetUseCase {
       const assetId = AssetId.create(assetIdNumeric)
       const recipient = Address.create(params.recipient)
       const asset = await this.apiRepository.getAssetData(assetId)
+      const auth = await signApiRequest(this.walletRepository, { action: 'mint', assetId: assetId.value })
       const imageBlob = await this.apiRepository.downloadImage(asset.image_path)
       const imageFile = new File([imageBlob], `${asset.uid}.png`, { type: imageBlob.type || 'image/png' })
-      const imageUploadResult = await this.ipfsRepository.uploadFile(imageFile)
+      const imageUploadResult = await this.ipfsRepository.uploadFile(
+        imageFile,
+        await this.apiRepository.createUploadUrl(assetId, auth)
+      )
       const metadata: IPFSMetadata = {
         uid: asset.uid,
         name: asset.name,
@@ -62,13 +69,17 @@ export class MintNFTFromAssetUseCase {
         image_path: imageUploadResult.url.toString(),
         attributes: asset.attributes
       }
-      const metadataUploadResult = await this.ipfsRepository.uploadMetadata(metadata, String(asset.uid))
+      const metadataUploadResult = await this.ipfsRepository.uploadMetadata(
+        metadata,
+        String(asset.uid),
+        await this.apiRepository.createUploadUrl(assetId, auth)
+      )
       const mintResult = await this.nftRepository.mint({
         tokenURI: metadataUploadResult.url,
         assetId,
         to: recipient
       })
-      await this.apiRepository.removeAssetRecord(assetId)
+      await this.apiRepository.removeAssetRecord(assetId, mintResult.tokenId, auth)
       return {
         tokenId: mintResult.tokenId,
         transactionHash: mintResult.hash,

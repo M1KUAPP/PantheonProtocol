@@ -13,7 +13,8 @@ Contents:
 
 - **`apps/web/`:** one package with two entry points.
   - The single-page app: React Router 7 in SPA mode (`ssr: false`), React 19, styled-components, wagmi and viem. Routes are listed in `app/routes.ts`; the code is layered into `app/core/` (entities, value objects, repository interfaces), `app/application/` (use cases), `app/infrastructure/` (contract, Pinata, Supabase and HTTP repositories) and `app/presentation/` (routes, components, view models).
-  - The Express API, `app/server.ts`, which serves `/api/health`, the `/api/assets/{get,export,remove}/:uid` routes against the Supabase tables, and `/api/ipfs/upload-url`, which signs a short-lived Pinata upload URL so the browser never holds the Pinata JWT. The routes live in `app/presentation/routes/api/`.
+  - The Express API, `app/server.ts`, which serves `/api/health`, the `/api/assets/{get,export,remove}/:uid` routes against the Supabase tables, and `/api/ipfs/upload-url`, which signs a short-lived Pinata upload URL so the browser never holds the Pinata JWT. `createApiApp` in `app/presentation/routes/api/` builds it from injected dependencies, and `create-api-app.test.ts` beside it tests the routes against fakes.
+  - Every route that changes a table or spends Pinata quota (`upload-url`, `remove`, `export`) needs an EIP-191 signature from the player's wallet, in the `x-wallet-*` headers. `app/core/auth/api-auth.ts` defines the signed message; the API rejects signatures older than five minutes and checks on-chain that the signer holds the minted token (`remove`) or exported it (`export`). `GET /api/assets/get/:uid` and `/api/health` stay open.
   - `database-init/` holds the Prisma schema for the `source_game_assets` and `target_game_assets` tables and the seed script, which uploads `database-init/assets/game_asset_images/` to a Supabase Storage bucket.
 - **`apps/contracts/`:** Hardhat 2 with the viem toolbox. `contracts/` holds `AssetNFT` (ERC-721 with ERC-2981 royalties), `Marketplace` (escrowed listings) and `ExportManager` (burns a token and records the export). `ignition/modules/DeployContracts.ts` deploys all three.
 
@@ -22,10 +23,10 @@ Contents:
 Run these from the repository root unless noted.
 
 - `bun install`: installs the repository tooling (Prettier, Husky, commitlint, lint-staged) and the Git hooks.
-- `bun run check`: Prettier's check, then a frozen install, ESLint, typecheck and build of `apps/web/` (with `.env.example` as its env), then a frozen install and compile of `apps/contracts/`.
+- `bun run check`: Prettier's check, then a frozen install, ESLint, typecheck, `bun test` and build of `apps/web/` (with `.env.example` as its env), then a frozen install and compile of `apps/contracts/`.
 - `bun run lint`: Prettier's check. `bun run lint:fix` writes Prettier's formatting.
 - In `apps/contracts/`: `bun run node` starts a Hardhat node on `http://127.0.0.1:8545`, `bun run deploy` deploys the contracts to it, and `bun run new` cleans, compiles and starts a node.
-- In `apps/web/`: `bun run dev` (the app on `http://localhost:5173`), `bun run dev:server` (the API on `SERVER_PORT`, 3001 in `.env.example`), `bun run lint`, `bun run typecheck`, `bun run build`, `bun run db:migrate` and `bun run db:seed`.
+- In `apps/web/`: `bun run dev` (the app on `http://localhost:5173`), `bun run dev:server` (the API on `SERVER_PORT`, 3001 in `.env.example`), `bun run lint`, `bun run typecheck`, `bun run test`, `bun run build`, `bun run db:migrate` and `bun run db:seed`.
 
 ## Conventions
 

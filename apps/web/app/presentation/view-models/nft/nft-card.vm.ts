@@ -69,7 +69,8 @@ export function useNFTCardViewModel({
       useCases.inventory.exportNFT.execute({
         tokenId,
         userAddress: walletAddress!,
-        exportManagerAddress: exportManagerAddr
+        exportManagerAddress: exportManagerAddr,
+        assetId: metadata?.uid
       }),
     onMutate: () => {
       const toastId = notificationService.loading('Exporting NFT... Please confirm in your wallet')
@@ -86,9 +87,11 @@ export function useNFTCardViewModel({
         return
       }
       notificationService.success('NFT successfully exported!')
-      if (metadata) {
+      if (metadata && result.value.auth) {
         const syncResult = await useCases.inventory.syncExportToGame.execute({
           uid: metadata.uid,
+          tokenId: Number(tokenId),
+          auth: result.value.auth,
           name: metadata.name,
           description: metadata.description,
           item_type: metadata.item_type,

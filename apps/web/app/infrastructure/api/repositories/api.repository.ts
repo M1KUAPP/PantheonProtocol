@@ -1,6 +1,8 @@
+import type { ApiAuth } from '@core/auth/api-auth'
 import { NetworkError } from '@core/errors/domain-error'
 import type { GameAsset, IAPIRepository } from '@core/interfaces/api.repository.interface'
 import type { AssetId } from '@core/value-objects/asset-id.vo'
+import type { TokenId } from '@core/value-objects/token-id.vo'
 import { getHttpClient } from '@infrastructure/api/http-client'
 import { normalizeAttributes } from '@infrastructure/api/utils/attribute-mapper'
 
@@ -56,9 +58,9 @@ export class APIRepository implements IAPIRepository {
    * @param assetId - The unique identifier of the asset to remove
    * @throws NetworkError if the deletion fails
    */
-  async removeAssetRecord(assetId: AssetId): Promise<void> {
+  async removeAssetRecord(assetId: AssetId, tokenId: TokenId, auth: ApiAuth): Promise<void> {
     try {
-      const response = await this.httpClient.removeAssetRecord(assetId.value.toString())
+      const response = await this.httpClient.removeAssetRecord(assetId.value.toString(), tokenId.value, auth)
       if (!response.success) {
         throw new NetworkError(response.message || 'Failed to delete asset record')
       }
@@ -76,25 +78,45 @@ export class APIRepository implements IAPIRepository {
    * @param params - The NFT data to export to the game
    * @throws NetworkError if the export fails
    */
-  async exportNFTToGame(params: {
-    uid: number
-    name: string
-    description: string
-    item_type: string
-    rarity: string
-    imagePath: string
-    attributes: Array<{ trait_type: string; value: string | number }>
-  }): Promise<void> {
+  async createUploadUrl(assetId: AssetId, auth: ApiAuth): Promise<string> {
     try {
-      const response = await this.httpClient.exportNFT({
-        uid: params.uid,
-        name: params.name,
-        description: params.description,
-        item_type: params.item_type,
-        rarity: params.rarity,
-        image_path: params.imagePath,
-        attributes: params.attributes
-      })
+      const response = await this.httpClient.createIpfsUploadUrl(assetId.value, auth)
+      if (!response.success || !response.url) {
+        throw new NetworkError(response.message || 'The API returned no Pinata upload URL')
+      }
+      return response.url
+    } catch (error) {
+      throw new NetworkError(`Failed to get an upload URL: ${error instanceof Error ? error.message : String(error)}`)
+    }
+  }
+
+  async exportNFTToGame(
+    params: {
+      uid: number
+      tokenId: number
+      name: string
+      description: string
+      item_type: string
+      rarity: string
+      imagePath: string
+      attributes: Array<{ trait_type: string; value: string | number }>
+    },
+    auth: ApiAuth
+  ): Promise<void> {
+    try {
+      const response = await this.httpClient.exportNFT(
+        {
+          uid: params.uid,
+          tokenId: params.tokenId,
+          name: params.name,
+          description: params.description,
+          item_type: params.item_type,
+          rarity: params.rarity,
+          image_path: params.imagePath,
+          attributes: params.attributes
+        },
+        auth
+      )
       if (!response.success) {
         throw new NetworkError(response.message || 'Failed to export NFT to game')
       }

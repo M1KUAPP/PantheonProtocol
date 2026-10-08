@@ -57,4 +57,12 @@ export interface IWalletRepository {
    * @returns Promise resolving to the address or null if not connected
    */
   getAddress(): Promise<Address | null>
+
+  /**
+   * Signs a message with the connected wallet (EIP-191 personal_sign).
+   * @param message - The text to sign
+   * @returns Promise resolving to the signature
+   * @throws UserRejectedError if the user declines to sign
+   */
+  signMessage(message: string): Promise<`0x${string}`>
 }

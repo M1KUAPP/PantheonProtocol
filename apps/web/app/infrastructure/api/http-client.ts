@@ -1,5 +1,6 @@
 import type { AppConfig } from '@config/app-config'
 import { createAppConfig } from '@config/app-config'
+import { API_AUTH_HEADERS, type ApiAuth } from '@core/auth/api-auth'
 import { NetworkError } from '@core/errors/domain-error'
 
 /**
@@ -50,6 +51,8 @@ export type AssetDataResponse = HttpApiResponse & {
 export interface ExportNFTRequest {
   /** Unique identifier for the asset */
   uid: number
+  /** The burned token that carried the asset */
+  tokenId: number
   /** Display name */
   name: string
   /** Asset description */
@@ -111,11 +114,12 @@ class HttpClient {
    * @param endpoint - The API endpoint to call
    * @returns Promise resolving to the typed response
    */
-  private async get<T>(endpoint: string): Promise<T> {
+  private async get<T>(endpoint: string, headers: Record<string, string> = {}): Promise<T> {
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...headers
       }
     })
     return this.handleResponse<T>(response)
@@ -127,11 +131,12 @@ class HttpClient {
    * @param body - The request body to send
    * @returns Promise resolving to the typed response
    */
-  private async post<T>(endpoint: string, body: unknown): Promise<T> {
+  private async post<T>(endpoint: string, body: unknown, headers: Record<string, string> = {}): Promise<T> {
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...headers
       },
       body: JSON.stringify(body)
     })
@@ -143,11 +148,12 @@ class HttpClient {
    * @param endpoint - The API endpoint to call
    * @returns Promise resolving to the typed response
    */
-  private async delete<T>(endpoint: string): Promise<T> {
+  private async delete<T>(endpoint: string, headers: Record<string, string> = {}): Promise<T> {
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...headers
       }
     })
     return this.handleResponse<T>(response)
@@ -181,8 +187,12 @@ class HttpClient {
    * @param exportData - The NFT data to export
    * @returns Promise resolving to the export response
    */
-  async exportNFT(exportData: ExportNFTRequest): Promise<ExportNFTResponse> {
-    return this.post<ExportNFTResponse>(`${this.config.getApiEndpoints().EXPORT_RECORD}/${exportData.uid}`, exportData)
+  async exportNFT(exportData: ExportNFTRequest, auth: ApiAuth): Promise<ExportNFTResponse> {
+    return this.post<ExportNFTResponse>(
+      `${this.config.getApiEndpoints().EXPORT_RECORD}/${exportData.uid}`,
+      exportData,
+      authHeaders(auth)
+    )
   }
 
   /**
@@ -190,16 +200,28 @@ class HttpClient {
    * @param uid - The unique identifier of the asset to remove
    * @returns Promise resolving to the deletion response
    */
-  async removeAssetRecord(uid: string | number): Promise<DeleteAssetResponse> {
-    return this.delete<DeleteAssetResponse>(`${this.config.getApiEndpoints().REMOVE_RECORD}/${uid}`)
+  async removeAssetRecord(uid: string | number, tokenId: number, auth: ApiAuth): Promise<DeleteAssetResponse> {
+    return this.delete<DeleteAssetResponse>(
+      `${this.config.getApiEndpoints().REMOVE_RECORD}/${uid}?tokenId=${tokenId}`,
+      authHeaders(auth)
+    )
   }
 
   /**
    * Asks the API for a signed Pinata upload URL.
    * @returns Promise resolving to the response holding the URL
    */
-  async createIpfsUploadUrl(): Promise<UploadUrlResponse> {
-    return this.post<UploadUrlResponse>(this.config.getApiEndpoints().IPFS_UPLOAD_URL, {})
+  async createIpfsUploadUrl(assetId: number, auth: ApiAuth): Promise<UploadUrlResponse> {
+    return this.post<UploadUrlResponse>(this.config.getApiEndpoints().IPFS_UPLOAD_URL, { assetId }, authHeaders(auth))
+  }
+}
+
+/** Request headers that carry a wallet signature. */
+function authHeaders(auth: ApiAuth): Record<string, string> {
+  return {
+    [API_AUTH_HEADERS.address]: auth.address,
+    [API_AUTH_HEADERS.signature]: auth.signature,
+    [API_AUTH_HEADERS.issuedAt]: auth.issuedAt
   }
 }
 

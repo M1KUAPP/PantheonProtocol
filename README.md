@@ -139,7 +139,7 @@ The screens below come from the app running locally against a Hardhat node and a
 
     <img src="docs/readme/steps/1-connect.png" alt="Landing page with Connect Wallet" width="100%">
 
-2.  **Mint a game item.** On `/create-nft`, the player enters an item's ID from the source game. The app fetches the item from the API and downloads its image. It pins the image and metadata to IPFS through a signed Pinata upload URL from the API, and mints the NFT with the item's ID recorded on-chain. Finally, the API removes the item from the source game.
+2.  **Mint a game item.** On `/create-nft`, the player enters an item's ID from the source game. The app fetches the item from the API, and the wallet signs one message that authorizes the mint. The app downloads the item's image, pins it and the metadata to IPFS through signed Pinata upload URLs from the API, and mints the NFT with the item's ID recorded on-chain. Finally, the API checks that the signer holds the new token and removes the item from the source game.
 
     <img src="docs/readme/steps/2-mint.png" alt="Create NFT page after a successful mint" width="100%">
 
@@ -159,7 +159,7 @@ The screens below come from the app running locally against a Hardhat node and a
 
     <img src="docs/readme/steps/6-buy.png" alt="Listing details with Buy Now" width="100%">
 
-7.  **Export it into another game.** **Export to Game** burns the NFT through the export contract, which records the export on-chain. The API then writes the item into the target game's table.
+7.  **Export it into another game.** **Export to Game** asks the wallet to sign the export, then burns the NFT through the export contract, which records the export on-chain. The API checks that the signer made that export, then writes the item into the target game's table.
 
     <img src="docs/readme/steps/7-export.png" alt="Inventory after an export" width="100%">
 
@@ -173,6 +173,7 @@ The screens below come from the app running locally against a Hardhat node and a
 
 - **Game items as NFTs.** `AssetNFT` is an ERC-721 that stores each token's IPFS metadata URI and the ID of the game item it came from. Minting removes the item from the source game's table.
 - **No secrets in the browser.** The API signs a 60-second Pinata upload URL for each pin, and only the API reads the Pinata JWT and the Supabase service-role key.
+- **Wallet-signed API requests.** Every API request that changes a game table or spends Pinata quota carries an EIP-191 signature from the player's wallet, one per mint or export. The API rejects signatures older than five minutes, and checks on-chain that the signer holds the minted token or made the export.
 - **Escrowed marketplace.** `Marketplace` holds listed NFTs until they sell or the seller cancels. Listing asks for the approval first when it's missing.
 - **Creator royalties.** `AssetNFT` implements ERC-2981, with a default 5% royalty to the deployer, and `Marketplace` pays it on every sale.
 - **Search, filters and sorting.** Search by name, filter by item type and rarity, and sort by price, rarity or a numeric attribute such as attack.
@@ -276,7 +277,7 @@ Everything runs locally: a Hardhat node for the contracts, Supabase (local or ho
 
 7.  **Connect a wallet.** In MetaMask, add a network with the RPC URL `http://127.0.0.1:8545`, chain ID `31337` and currency `ETH`. Then import one of the test account private keys that `bun run node` printed. The source game's item IDs start at `10001`. Those keys are public, so never use them on a real network.
 
-8.  **Run the checks.** From the repository root, `bun run check` runs Prettier, then installs, lints, typechecks and builds `apps/web/` and compiles `apps/contracts/`.
+8.  **Run the checks.** From the repository root, `bun run check` runs Prettier, then installs, lints, typechecks, tests and builds `apps/web/` and compiles `apps/contracts/`.
 
     ```sh
     bun run check
