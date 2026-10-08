@@ -8,8 +8,30 @@
 
 import type { INotificationService } from '@application/services/interfaces/notification.service.interface'
 import { NotificationLevel } from '@application/services/interfaces/notification.service.interface'
+import {
+  ArrowPathIcon,
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+  InformationCircleIcon,
+  XCircleIcon
+} from '@heroicons/react/24/outline'
 import { NotificationStore } from '@presentation/services/notification-store.service'
+import type { ReactElement } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
+
+/** Keeps the icon at full size when a long message wraps. */
+const iconStyle = { flexShrink: 0 } as const
+
+/** One icon per level, from the Heroicons outline set the rest of the UI uses. */
+const icons: Record<NotificationLevel, ReactElement> = {
+  [NotificationLevel.Success]: <CheckCircleIcon width={20} height={20} style={iconStyle} />,
+  [NotificationLevel.Error]: <XCircleIcon width={20} height={20} style={iconStyle} />,
+  [NotificationLevel.Info]: <InformationCircleIcon width={20} height={20} style={iconStyle} />,
+  [NotificationLevel.Warning]: <ExclamationTriangleIcon width={20} height={20} style={iconStyle} />,
+  [NotificationLevel.Loading]: (
+    <ArrowPathIcon width={20} height={20} style={{ ...iconStyle, animation: 'spin 1s linear infinite' }} />
+  )
+}
 
 /**
  * Toast-based notification service implementation.
@@ -37,10 +59,7 @@ export class ToastNotificationService implements INotificationService {
         color: '#fff',
         fontWeight: '500'
       },
-      iconTheme: {
-        primary: '#fff',
-        secondary: '#10b981'
-      }
+      icon: icons[NotificationLevel.Success]
     })
   }
 
@@ -59,10 +78,7 @@ export class ToastNotificationService implements INotificationService {
         color: '#fff',
         fontWeight: '500'
       },
-      iconTheme: {
-        primary: '#fff',
-        secondary: '#ef4444'
-      }
+      icon: icons[NotificationLevel.Error]
     })
   }
 
@@ -76,7 +92,7 @@ export class ToastNotificationService implements INotificationService {
     return toast(message, {
       duration,
       position: this.defaultPosition,
-      icon: 'ℹ️',
+      icon: icons[NotificationLevel.Info],
       style: {
         background: '#3b82f6',
         color: '#fff',
@@ -95,7 +111,7 @@ export class ToastNotificationService implements INotificationService {
     return toast(message, {
       duration,
       position: this.defaultPosition,
-      icon: '⚠️',
+      icon: icons[NotificationLevel.Warning],
       style: {
         background: '#f59e0b',
         color: '#fff',
@@ -112,6 +128,7 @@ export class ToastNotificationService implements INotificationService {
   loading(message: string): string {
     return toast.loading(message, {
       position: this.defaultPosition,
+      icon: icons[NotificationLevel.Loading],
       style: {
         background: '#6366f1',
         color: '#fff',
@@ -130,6 +147,7 @@ export class ToastNotificationService implements INotificationService {
     const baseStyle = {
       position: this.defaultPosition,
       duration: this.defaultDuration,
+      icon: icons[level],
       style: {
         color: '#fff',
         fontWeight: '500'
@@ -160,7 +178,6 @@ export class ToastNotificationService implements INotificationService {
         toast(message, {
           ...baseStyle,
           id: toastId,
-          icon: 'ℹ️',
           style: {
             ...baseStyle.style,
             background: '#3b82f6'
@@ -171,7 +188,6 @@ export class ToastNotificationService implements INotificationService {
         toast(message, {
           ...baseStyle,
           id: toastId,
-          icon: '⚠️',
           style: {
             ...baseStyle.style,
             background: '#f59e0b'
