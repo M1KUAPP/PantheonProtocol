@@ -59,7 +59,7 @@ export function useCreateNFTViewModel(): CreateNFTViewModelReturn {
         return
       }
       const tokenId = result.value.tokenId.value
-      notificationService.success(`🎉 NFT Minted Successfully! Token ID: #${tokenId}`, 6000)
+      notificationService.success(`NFT Minted Successfully! Token ID: #${tokenId}`, 6000)
       setTimeout(() => {
         notificationService.info('Your NFT is on the blockchain! Check your inventory to see it.', 4000)
       }, 500)
