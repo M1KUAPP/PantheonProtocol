@@ -28,6 +28,7 @@ import type { ConnectWalletUseCase } from '@application/use-cases/wallet/connect
 import type { DisconnectWalletUseCase } from '@application/use-cases/wallet/disconnect-wallet.uc'
 import type { AppConfig } from '@config/app-config'
 import type { RepositoryContainer } from '@core/interfaces/repository-container.interface'
+import type { Config } from '@wagmi/core'
 
 /**
  * Container for NFT-related use cases.
@@ -113,7 +114,7 @@ export interface DIContainer {
  */
 export interface DIContainerConfig {
   readonly appConfig: AppConfig
-  readonly wagmiConfig: any
+  readonly wagmiConfig: Config
   readonly repositoryOverrides?: Partial<RepositoryContainer>
   readonly serviceOverrides?: Partial<ServiceContainer>
 }

@@ -61,7 +61,7 @@ export function useTransactionHistoryViewModel(): TransactionHistoryViewModelRet
       } else {
         setTransactions([])
       }
-    } catch (err) {
+    } catch {
       setTransactions([])
     } finally {
       setIsLoading(false)

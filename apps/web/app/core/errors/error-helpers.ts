@@ -24,7 +24,7 @@
  */
 export function isUserRejectedError(error: unknown): boolean {
   if (!error || typeof error !== 'object') return false
-  const errorObj = error as any
+  const errorObj = error as { code?: unknown; cause?: unknown }
   if (errorObj.code === 4001) {
     return true
   }

@@ -5,6 +5,7 @@ import { Address } from '@core/value-objects/address.vo'
 import type { TokenId } from '@core/value-objects/token-id.vo'
 import { EXPORT_MANAGER_ABI } from '@infrastructure/blockchain/contracts/abis'
 import { readContract, waitForTransactionReceipt, writeContract } from '@wagmi/core'
+import type { Config } from '@wagmi/core'
 
 /**
  * Implementation of IExportManagerRepository using the ExportManager smart contract.
@@ -14,8 +15,8 @@ import { readContract, waitForTransactionReceipt, writeContract } from '@wagmi/c
  */
 export class ExportManagerContractRepository implements IExportManagerRepository {
   private readonly contractAddress: `0x${string}`
-  private readonly config: any
-  constructor(contractAddress: `0x${string}`, config: any) {
+  private readonly config: Config
+  constructor(contractAddress: `0x${string}`, config: Config) {
     this.contractAddress = contractAddress
     this.config = config
   }

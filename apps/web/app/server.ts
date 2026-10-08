@@ -10,6 +10,7 @@ import { createAppConfig } from '@config/app-config.js'
 import { ConfigurationError } from '@core/errors/domain-error'
 import exportRoutes from '@presentation/routes/api/export-nft.js'
 import getDataRoutes from '@presentation/routes/api/get-asset-data.js'
+import ipfsUploadUrlRoutes from '@presentation/routes/api/ipfs-upload-url.js'
 import removeDataRoutes from '@presentation/routes/api/remove-asset-data.js'
 import cors from 'cors'
 import type { NextFunction, Request, Response } from 'express'
@@ -39,7 +40,7 @@ app.use(express.urlencoded({ extended: true }))
 app.get('/api/health', async (_req: Request, res: Response) => {
   try {
     const supabaseUrl = appConfig.getSupabaseUrl()
-    const supabaseKey = appConfig.getSupabaseAnonKey()
+    const supabaseKey = appConfig.getSupabaseServiceRoleKey()
     const isDbConnected = !!(supabaseUrl && supabaseKey)
     res.status(200).json({
       status: 'healthy',
@@ -59,6 +60,7 @@ app.get('/api/health', async (_req: Request, res: Response) => {
 app.use(apiEndpoints.GET_RECORD, getDataRoutes)
 app.use(apiEndpoints.EXPORT_RECORD, exportRoutes)
 app.use(apiEndpoints.REMOVE_RECORD, removeDataRoutes)
+app.use(apiEndpoints.IPFS_UPLOAD_URL, ipfsUploadUrlRoutes)
 
 /** 404 handler for unmatched routes. */
 app.use((req: Request, res: Response) => {
@@ -72,8 +74,7 @@ app.use((req: Request, res: Response) => {
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   res.status(500).json({
     success: false,
-    message: err.message,
-    stack: err.stack
+    message: err.message
   })
 })
 
@@ -85,12 +86,13 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 async function startServer() {
   try {
     const supabaseUrl = appConfig.getSupabaseUrl()
-    const supabaseKey = appConfig.getSupabaseAnonKey()
+    const supabaseKey = appConfig.getSupabaseServiceRoleKey()
     if (!supabaseUrl || !supabaseKey) {
       throw new ConfigurationError('Database service is not properly configured')
     }
     app.listen(PORT)
-  } catch {
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : error)
     process.exit(1)
   }
 }

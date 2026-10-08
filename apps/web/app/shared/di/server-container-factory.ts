@@ -53,7 +53,7 @@ function createServerDatabaseContainer(config: ServerDatabaseConfig): ServerData
 export function createServerDatabaseContainerFromConfig(): ServerDatabaseContainer {
   const appConfig = createAppConfig()
   const supabaseUrl = appConfig.getSupabaseUrl()
-  const supabaseKey = appConfig.getSupabaseAnonKey()
+  const supabaseKey = appConfig.getSupabaseServiceRoleKey()
   if (!supabaseUrl || !supabaseKey) {
     throw new ConfigurationError('Database configuration is missing')
   }

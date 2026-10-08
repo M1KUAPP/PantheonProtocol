@@ -20,12 +20,12 @@ export const ScrollProgressLine = () => {
   const [strokeDashoffset, setStrokeDashoffset] = useState(0)
   gsap.registerPlugin(ScrollTrigger)
   useLayoutEffect(() => {
-    let e = lineRef.current
-    let svg = document.getElementsByClassName('svg-path')[0] as SVGPathElement
+    const e = lineRef.current
+    const svg = document.getElementsByClassName('svg-path')[0] as SVGPathElement
     const length = svg.getTotalLength()
     setStrokeDasharray(length)
     setStrokeDashoffset(length)
-    let tl = gsap.timeline({
+    const tl = gsap.timeline({
       scrollTrigger: {
         trigger: e,
         start: 'top center',

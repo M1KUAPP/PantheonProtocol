@@ -62,7 +62,7 @@ export class AppConfig {
   private readonly pinataGateway?: string
   private readonly apiBaseUrl?: string
   private readonly supabaseUrl?: string
-  private readonly supabaseAnonKey?: string
+  private readonly supabaseServiceRoleKey?: string
   private readonly databaseTables: {
     readonly SOURCE_TABLE: string | undefined
     readonly TARGET_TABLE: string | undefined
@@ -80,7 +80,8 @@ export class AppConfig {
   private readonly apiEndpoints = {
     GET_RECORD: '/api/assets/get',
     EXPORT_RECORD: '/api/assets/export',
-    REMOVE_RECORD: '/api/assets/remove'
+    REMOVE_RECORD: '/api/assets/remove',
+    IPFS_UPLOAD_URL: '/api/ipfs/upload-url'
   } as const
   private readonly avatarConfig = {
     BASE_URL: 'https://api.dicebear.com/8.x/identicon/svg'
@@ -94,7 +95,7 @@ export class AppConfig {
     this.pinataGateway = options.pinataGateway
     this.apiBaseUrl = options.apiBaseUrl
     this.supabaseUrl = options.supabaseUrl
-    this.supabaseAnonKey = options.supabaseServiceRoleKey
+    this.supabaseServiceRoleKey = options.supabaseServiceRoleKey
     this.port = options.port
     this.frontendUrl = options.frontendUrl
     this.databaseTables = {
@@ -122,15 +123,15 @@ export class AppConfig {
         },
         rpcUrl
       },
-      pinataJWT: env.VITE_PINATA_JWT,
+      pinataJWT: env.PINATA_JWT,
       pinataGateway: env.VITE_PINATA_GATEWAY,
       apiBaseUrl: env.VITE_API_BASE_URL,
-      supabaseUrl: env.VITE_SUPABASE_URL,
-      supabaseServiceRoleKey: env.VITE_SUPABASE_SERVICE_ROLE_KEY,
+      supabaseUrl: env.SUPABASE_URL,
+      supabaseServiceRoleKey: env.SUPABASE_SERVICE_ROLE_KEY,
       port: env.SERVER_PORT ? parseInt(env.SERVER_PORT, 10) : undefined,
       frontendUrl: env.FRONTEND_URL,
-      sourceTable: env.VITE_SUPABASE_SOURCE_TABLE,
-      targetTable: env.VITE_SUPABASE_TARGET_TABLE
+      sourceTable: env.SUPABASE_SOURCE_TABLE,
+      targetTable: env.SUPABASE_TARGET_TABLE
     }
   }
   static fromImportMeta(): AppConfig {
@@ -199,8 +200,8 @@ export class AppConfig {
   getSupabaseUrl(): string | undefined {
     return this.supabaseUrl
   }
-  getSupabaseAnonKey(): string | undefined {
-    return this.supabaseAnonKey
+  getSupabaseServiceRoleKey(): string | undefined {
+    return this.supabaseServiceRoleKey
   }
   getDatabaseTables() {
     return this.databaseTables

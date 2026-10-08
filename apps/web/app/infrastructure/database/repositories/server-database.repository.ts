@@ -10,10 +10,10 @@ import { ServerDatabaseService } from '@infrastructure/database/server-database.
  */
 export class ServerDatabaseRepository implements IDatabaseRepository {
   constructor(private databaseService: ServerDatabaseService) {}
-  async getAssetByUid(tableName: string, uid: number): Promise<DatabaseQueryResult<any>> {
+  async getAssetByUid(tableName: string, uid: number): Promise<DatabaseQueryResult<unknown>> {
     return await this.databaseService.getAssetByUid(tableName, uid)
   }
-  async insertAsset(tableName: string, asset: any): Promise<DatabaseQueryResult<any>> {
+  async insertAsset(tableName: string, asset: object): Promise<DatabaseQueryResult<unknown>> {
     return await this.databaseService.insertAsset(tableName, asset)
   }
   async deleteAsset(tableName: string, uid: number): Promise<DatabaseQueryResult<number>> {

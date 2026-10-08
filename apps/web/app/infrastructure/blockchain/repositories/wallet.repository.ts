@@ -92,7 +92,7 @@ export class WalletRepository implements IWalletRepository {
     try {
       const account = getAccount(this.config)
       return account.isConnected
-    } catch (error) {
+    } catch {
       return false
     }
   }
