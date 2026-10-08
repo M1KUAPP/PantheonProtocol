@@ -10,7 +10,7 @@ import { Router } from 'express'
 const router = Router()
 const appConfig = createAppConfig()
 
-router.get('/:uid', async (req: Request, res: Response<AssetDataResponse>) => {
+router.get('/:uid', async (req: Request<{ uid: string }>, res: Response<AssetDataResponse>) => {
   try {
     const { uid } = req.params
     const validation = validateUid(uid)

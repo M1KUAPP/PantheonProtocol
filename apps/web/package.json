@@ -1,7 +1,9 @@
 {
-  "name": "dapp",
+  "name": "web",
+  "private": true,
   "type": "module",
   "scripts": {
+    "build": "react-router build",
     "typecheck": "react-router typegen && tsc",
     "dev": "react-router dev",
     "dev:server": "tsx watch --env-file=../../.env ./app/server.ts",

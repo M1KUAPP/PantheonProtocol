@@ -1,12 +1,13 @@
 {
-  "name": "chain",
+  "name": "contracts",
+  "private": true,
   "type": "commonjs",
   "scripts": {
     "clean": "rm -rf ./artifacts ./cache ./ignition/deployments",
-    "compile": "npx hardhat compile",
-    "node": "npx hardhat node",
-    "new": "npm run clean && npm run compile && npm run node",
-    "deploy": "npx hardhat ignition deploy ./ignition/modules/DeployContracts.ts --reset --network localhost"
+    "compile": "hardhat compile",
+    "node": "hardhat node",
+    "new": "bun run clean && bun run compile && bun run node",
+    "deploy": "hardhat ignition deploy ./ignition/modules/DeployContracts.ts --reset --network localhost"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.4.0"

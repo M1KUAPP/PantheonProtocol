@@ -10,7 +10,7 @@ import { Router } from 'express'
 const router = Router()
 const appConfig = createAppConfig()
 
-router.delete('/:uid', async (req: Request, res: Response<DeleteAssetResponse>) => {
+router.delete('/:uid', async (req: Request<{ uid: string }>, res: Response<DeleteAssetResponse>) => {
   try {
     const { uid } = req.params
     const validation = validateUid(uid)
