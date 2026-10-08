@@ -32,7 +32,6 @@ const MENU_ITEM_MAP = [
   { id: 'about', name: 'About' },
   { id: 'explore', name: 'Explore' },
   { id: 'showcase', name: 'Showcase' },
-  { id: 'team', name: 'Team' },
   { id: 'faq', name: 'FAQ' }
 ]
 

@@ -2,7 +2,7 @@
  * Home/landing page route component.
  *
  * Renders the public-facing landing page with navigation,
- * hero section, about, features, team, and FAQ sections.
+ * hero section, about, features, and FAQ sections.
  * @module
  */
 
@@ -14,7 +14,6 @@ import { Home } from '@presentation/components/landing/home'
 import { NavigationBar } from '@presentation/components/landing/navigation-bar'
 import { ScrollToTop } from '@presentation/components/landing/scroll-to-top'
 import { Showcase } from '@presentation/components/landing/showcase'
-import { Team } from '@presentation/components/landing/team'
 import { LightTheme } from '@presentation/styles/theme-definitions'
 import { ThemeProvider } from 'styled-components'
 import type { Route } from './+types/home'
@@ -33,7 +32,6 @@ export default function HomePage() {
       <About />
       <Explore />
       <Showcase />
-      <Team />
       <Faq />
       <Footer />
       <ScrollToTop />
