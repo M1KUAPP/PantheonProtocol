@@ -1,0 +1,28 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model source_game_assets {
+  uid         Int     @id
+  name        String
+  description String
+  image_path  String
+  item_type   String
+  rarity      String
+  attributes  Json    @db.JsonB
+}
+
+model target_game_assets {
+  uid         Int     @id
+  name        String
+  description String
+  image_path  String
+  item_type   String
+  rarity      String
+  attributes  Json    @db.JsonB
+}
